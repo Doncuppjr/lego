@@ -7,7 +7,7 @@ rm -rf work/*
 
 for ARCH in amd64 arm64; do
   case "$ARCH" in
-    amd64) UPSTREAM_ARCH="x86_64" ;;
+    amd64) UPSTREAM_ARCH="amd64" ;;
     arm64) UPSTREAM_ARCH="arm64" ;;
   esac
 
