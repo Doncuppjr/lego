@@ -1,0 +1,64 @@
+name: Build and publish lego APT repo
+
+on:
+  workflow_dispatch:
+    inputs:
+      lego_version:
+        description: 'lego version without v; empty means latest'
+        required: false
+        default: ''
+  schedule:
+    - cron: '17 7 * * *'
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install packaging tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y curl jq gnupg reprepro
+          curl -fsSL https://github.com/goreleaser/nfpm/releases/latest/download/nfpm_Linux_x86_64.tar.gz \
+            | sudo tar -xz -C /usr/local/bin nfpm
+
+      - name: Determine lego version
+        id: version
+        run: |
+          if [ -n '${{ github.event.inputs.lego_version }}' ]; then
+            echo 'version=${{ github.event.inputs.lego_version }}' >> "$GITHUB_OUTPUT"
+          else
+            echo "version=$(scripts/get-latest-lego.sh)" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build deb packages
+        run: scripts/build-debs.sh '${{ steps.version.outputs.version }}'
+
+      - name: Build signed APT repository
+        env:
+          APT_GPG_PRIVATE_KEY: ${{ secrets.APT_GPG_PRIVATE_KEY }}
+          APT_GPG_KEY_ID: ${{ vars.APT_GPG_KEY_ID }}
+        run: scripts/publish-apt-repo.sh
+
+      - name: Upload GitHub Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
