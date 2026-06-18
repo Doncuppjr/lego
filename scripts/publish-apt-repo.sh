@@ -9,6 +9,22 @@ mkdir -p public/conf
 mv public/distributions.tmp public/conf/distributions
 
 # Import private key for repo signing.
+mkdir -p ~/.gnupg
+chmod 700 ~/.gnupg
+
+cat > ~/.gnupg/gpg-agent.conf <<EOF
+allow-loopback-pinentry
+EOF
+
+cat > ~/.gnupg/gpg.conf <<EOF
+pinentry-mode loopback
+batch
+yes
+EOF
+
+gpgconf --kill gpg-agent || true
+gpgconf --launch gpg-agent
+
 printf '%s' "${APT_GPG_PRIVATE_KEY:?APT_GPG_PRIVATE_KEY required}" | gpg --batch --import
 
 # Export public key in binary keyring form for client install.
