@@ -29,6 +29,9 @@ contents:
     file_info:
       mode: 0644
 
+  - dst: /etc/lego
+    type: dir
+
   - src: packaging/lego/lego.yml.example
     dst: /etc/lego/lego.yml.example
     type: config|noreplace
