@@ -29,12 +29,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: actions/setup-go@v5
+        with:
+          go-version: 'stable'
+
       - name: Install packaging tools
         run: |
           sudo apt-get update
           sudo apt-get install -y curl jq gnupg reprepro
-          curl -fsSL https://github.com/goreleaser/nfpm/releases/latest/download/nfpm_Linux_amd64.tar.gz \
-            | sudo tar -xz -C /usr/local/bin nfpm
+
+          go install github.com/goreleaser/nfpm/v2/cmd/nfpm@latest
+          echo "$HOME/go/bin" >> "$GITHUB_PATH"
 
       - name: Determine lego version
         id: version
