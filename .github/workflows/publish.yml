@@ -56,6 +56,7 @@ jobs:
       - name: Build signed APT repository
         env:
           APT_GPG_PRIVATE_KEY: ${{ secrets.APT_GPG_PRIVATE_KEY }}
+          APT_GPG_PASSPHRASE: ${{ secrets.APT_GPG_PASSPHRASE }}
           APT_GPG_KEY_ID: ${{ vars.APT_GPG_KEY_ID }}
         run: scripts/publish-apt-repo.sh
 
