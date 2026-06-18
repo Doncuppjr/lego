@@ -14,6 +14,8 @@ chmod 700 ~/.gnupg
 
 cat > ~/.gnupg/gpg-agent.conf <<EOF
 allow-loopback-pinentry
+default-cache-ttl 3600
+max-cache-ttl 3600
 EOF
 
 cat > ~/.gnupg/gpg.conf <<EOF
@@ -29,6 +31,16 @@ printf '%s' "${APT_GPG_PRIVATE_KEY:?APT_GPG_PRIVATE_KEY required}" | gpg --batch
 
 # Export public key in binary keyring form for client install.
 gpg --batch --yes --output public/lego-archive-keyring.gpg --export "$APT_GPG_KEY_ID"
+
+# Unlock/cache the private key for reprepro
+echo "test" > /tmp/gpg-test.txt
+gpg --batch --yes \
+  --pinentry-mode loopback \
+  --passphrase "$APT_GPG_PASSPHRASE" \
+  --local-user "$APT_GPG_KEY_ID" \
+  --detach-sign /tmp/gpg-test.txt
+
+rm -f /tmp/gpg-test.txt /tmp/gpg-test.txt.sig
 
 # Include packages in each supported Ubuntu suite.
 for suite in jammy noble resolute; do
