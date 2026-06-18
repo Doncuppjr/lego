@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Example deploy hook: export renewed lego certs into PKCS12 and JKS for MCS.
+# Copy to /etc/lego/hooks/deploy.d/50-export-mcs-jks, edit paths/passwords, chmod +x.
+# lego v5 provides LEGO_HOOK_CERT_PATH and LEGO_HOOK_CERT_KEY_PATH to deploy hooks.
+
+: "${LEGO_HOOK_CERT_PATH:?missing LEGO_HOOK_CERT_PATH}"
+: "${LEGO_HOOK_CERT_KEY_PATH:?missing LEGO_HOOK_CERT_KEY_PATH}"
+
+MCS_DIR="/etc/mcs/tls"
+P12="${MCS_DIR}/mcs.p12"
+JKS="${MCS_DIR}/mcs.jks"
+ALIAS="mcs"
+STOREPASS="changeit"
+KEYPASS="${STOREPASS}"
+
+install -d -m 0750 "$MCS_DIR"
+
+openssl pkcs12 -export \
+  -name "$ALIAS" \
+  -in "$LEGO_HOOK_CERT_PATH" \
+  -inkey "$LEGO_HOOK_CERT_KEY_PATH" \
+  -out "$P12" \
+  -passout "pass:${STOREPASS}"
+
+keytool -importkeystore -noprompt \
+  -srckeystore "$P12" \
+  -srcstoretype PKCS12 \
+  -srcstorepass "$STOREPASS" \
+  -destkeystore "$JKS" \
+  -deststoretype JKS \
+  -deststorepass "$STOREPASS" \
+  -destkeypass "$KEYPASS"
+
+chmod 0640 "$P12" "$JKS"
+
+# systemctl reload-or-restart mcs || true

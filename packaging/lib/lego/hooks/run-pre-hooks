@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -euo pipefail
+HOOK_DIR="/etc/lego/hooks/pre.d"
+[ -d "$HOOK_DIR" ] || exit 0
+run-parts --exit-on-error "$HOOK_DIR"

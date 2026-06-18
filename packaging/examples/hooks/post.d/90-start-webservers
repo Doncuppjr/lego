@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Restart common listeners after lego completes, successful or not.
+# Copy to /etc/lego/hooks/post.d/90-start-webservers and chmod +x to enable.
+
+for service in nginx apache2 httpd; do
+  if systemctl list-unit-files "${service}.service" >/dev/null 2>&1; then
+    systemctl start "$service" || true
+  fi
+done
