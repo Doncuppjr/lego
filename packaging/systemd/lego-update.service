@@ -1,0 +1,7 @@
+[Unit]
+Description=Renew ACME certificates with lego
+Documentation=https://go-acme.github.io/lego/
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/lego --config /etc/lego/lego.yml renew

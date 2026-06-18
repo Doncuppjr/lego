@@ -13,3 +13,28 @@ contents:
     dst: /usr/bin/lego
     file_info:
       mode: 0755
+
+  - src: packaging/bin/lego-init
+    dst: /usr/bin/lego-init
+    file_info:
+      mode: 0755
+
+  - src: packaging/systemd/lego-update.service
+    dst: /lib/systemd/system/lego-update.service
+    file_info:
+      mode: 0644
+
+  - src: packaging/systemd/lego-update.timer
+    dst: /lib/systemd/system/lego-update.timer
+    file_info:
+      mode: 0644
+
+  - src: packaging/lego/lego.yml.example
+    dst: /etc/lego/lego.yml.example
+    type: config|noreplace
+    file_info:
+      mode: 0644
+
+scripts:
+  postinstall: packaging/scripts/postinstall.sh
+  preremove: packaging/scripts/preremove.sh

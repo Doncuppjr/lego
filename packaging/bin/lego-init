@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+CONFIG="/etc/lego/lego.yml"
+
+read -rp "FQDN: " FQDN
+read -rp "Email: " EMAIL
+
+sudo install -d -m 0755 /etc/lego
+
+sudo tee "$CONFIG" >/dev/null <<EOF
+email: ${EMAIL}
+acceptTOS: true
+path: /etc/lego/certificates
+
+certificates:
+  ${FQDN}:
+    domains:
+      - ${FQDN}
+    challenge: tls-alpn
+
+challenges:
+  tls-alpn: {}
+EOF
+
+sudo chmod 0644 "$CONFIG"
+
+echo "Created $CONFIG"
+echo "Enable renewal with:"
+echo "  sudo systemctl enable --now lego-update.timer"

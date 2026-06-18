@@ -1,0 +1,12 @@
+email: admin@example.com
+acceptTOS: true
+path: /var/lib/lego
+
+certificates:
+  default:
+    domains:
+      - example.com
+    challenge: tls-alpn
+
+challenges:
+  tls-alpn: {}
