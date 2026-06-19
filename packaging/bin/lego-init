@@ -1,24 +1,17 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if [ "${EUID}" -ne 0 ]; then
-  echo "Please run as root: sudo lego-init" >&2
-  exit 1
-fi
-
 CONFIG="/etc/lego/lego.yml"
 
 read -rp "FQDN: " FQDN
 read -rp "Email: " EMAIL
 
-install -d -m 0755 /etc/lego
-install -d -m 0755 /etc/lego/hooks /etc/lego/hooks/pre.d /etc/lego/hooks/deploy.d /etc/lego/hooks/post.d
-install -d -m 0700 /var/lib/lego
+sudo install -d -m 0755 /etc/lego
 
-cat > "$CONFIG" <<EOF2
+sudo tee "$CONFIG" >/dev/null <<EOF
 email: ${EMAIL}
 acceptTOS: true
-path: /var/lib/lego
+path: /etc/lego/certificates
 
 certificates:
   ${FQDN}:
@@ -28,29 +21,10 @@ certificates:
 
 challenges:
   tls-alpn: {}
+EOF
 
-hooks:
-  pre:
-    command: /usr/lib/lego/hooks/run-pre-hooks
-  deploy:
-    command: /usr/lib/lego/hooks/run-deploy-hooks
-  post:
-    command: /usr/lib/lego/hooks/run-post-hooks
-EOF2
-
-chmod 0644 "$CONFIG"
+sudo chmod 0644 "$CONFIG"
 
 echo "Created $CONFIG"
-echo
-cat <<'EOF2'
-Optional hooks:
-  /etc/lego/hooks/pre.d      runs before issuance/renewal
-  /etc/lego/hooks/deploy.d   runs after successful issuance/renewal
-  /etc/lego/hooks/post.d     runs after lego completes
-
-Example hooks are installed under:
-  /usr/share/doc/lego/examples/hooks
-
-Enable renewal timer with:
-  sudo systemctl enable --now lego-update.timer
-EOF2
+echo "Enable renewal with:"
+echo "  sudo systemctl enable --now lego-update.timer"

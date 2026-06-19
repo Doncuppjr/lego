@@ -38,53 +38,6 @@ contents:
     file_info:
       mode: 0644
 
-  - dst: /var/lib/lego
-    type: dir
-    file_info:
-      mode: 0700
-
-  - dst: /etc/lego/hooks
-    type: dir
-
-  - dst: /etc/lego/hooks/pre.d
-    type: dir
-
-  - dst: /etc/lego/hooks/deploy.d
-    type: dir
-
-  - dst: /etc/lego/hooks/post.d
-    type: dir
-
-  - src: packaging/lib/lego/hooks/run-pre-hooks
-    dst: /usr/lib/lego/hooks/run-pre-hooks
-    file_info:
-      mode: 0755
-
-  - src: packaging/lib/lego/hooks/run-deploy-hooks
-    dst: /usr/lib/lego/hooks/run-deploy-hooks
-    file_info:
-      mode: 0755
-
-  - src: packaging/lib/lego/hooks/run-post-hooks
-    dst: /usr/lib/lego/hooks/run-post-hooks
-    file_info:
-      mode: 0755
-
-  - src: packaging/examples/hooks/pre.d/10-stop-webservers
-    dst: /usr/share/doc/lego/examples/hooks/pre.d/10-stop-webservers
-    file_info:
-      mode: 0755
-
-  - src: packaging/examples/hooks/deploy.d/50-export-mcs-jks
-    dst: /usr/share/doc/lego/examples/hooks/deploy.d/50-export-mcs-jks
-    file_info:
-      mode: 0755
-
-  - src: packaging/examples/hooks/post.d/90-start-webservers
-    dst: /usr/share/doc/lego/examples/hooks/post.d/90-start-webservers
-    file_info:
-      mode: 0755
-
 scripts:
   postinstall: packaging/scripts/postinstall.sh
   preremove: packaging/scripts/preremove.sh

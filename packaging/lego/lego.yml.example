@@ -10,11 +10,3 @@ certificates:
 
 challenges:
   tls-alpn: {}
-
-hooks:
-  pre:
-    command: /usr/lib/lego/hooks/run-pre-hooks
-  deploy:
-    command: /usr/lib/lego/hooks/run-deploy-hooks
-  post:
-    command: /usr/lib/lego/hooks/run-post-hooks
