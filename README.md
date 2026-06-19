@@ -3,7 +3,7 @@
 Builds the latest upstream `go-acme/lego` release into Debian packages and publishes an APT repository for Ubuntu 22.04, 24.04, and 26.04 via GitHub Pages.
 
 Suites:
-
+- Ubuntu 20.04: `focal`
 - Ubuntu 22.04: `jammy`
 - Ubuntu 24.04: `noble`
 - Ubuntu 26.04: `resolute`
