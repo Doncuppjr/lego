@@ -42,6 +42,9 @@ gpg --batch --yes \
 
 rm -f /tmp/gpg-test.txt /tmp/gpg-test.txt.sig
 
+mkdir -p public
+gpg --armor --export "$APT_GPG_KEY_ID" > public/public.asc
+
 # Include packages in each supported Ubuntu suite.
 for suite in focal jammy noble resolute trixie; do
   for deb in dist/*.deb; do
@@ -54,6 +57,6 @@ cat > public/index.html <<HTML
 <!doctype html>
 <title>lego APT Repository</title>
 <h1>lego APT Repository</h1>
-<p>Suites: jammy, noble, resolute. Component: main.</p>
+<p>Suites: focal, jammy, noble, resolute, trixie. Component: main.</p>
 <pre>deb [signed-by=/etc/apt/keyrings/lego-archive-keyring.gpg] https://OWNER.github.io/REPO \\$(. /etc/os-release; echo \\$VERSION_CODENAME) main</pre>
 HTML
