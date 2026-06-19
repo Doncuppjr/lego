@@ -7,6 +7,7 @@ Suites:
 - Ubuntu 22.04: `jammy`
 - Ubuntu 24.04: `noble`
 - Ubuntu 26.04: `resolute`
+- Debian 13: `Trixie`
 
 ## Repository setup
 
