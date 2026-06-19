@@ -1,3 +1,9 @@
+Codename: focal
+Suite: focal
+Components: main
+Architectures: amd64 arm64
+SignWith: APT_GPG_KEY_ID_PLACEHOLDER
+
 Codename: jammy
 Suite: jammy
 Components: main
@@ -12,6 +18,12 @@ SignWith: APT_GPG_KEY_ID_PLACEHOLDER
 
 Codename: resolute
 Suite: resolute
+Components: main
+Architectures: amd64 arm64
+SignWith: APT_GPG_KEY_ID_PLACEHOLDER
+
+Codename: trixie
+Suite: trixie
 Components: main
 Architectures: amd64 arm64
 SignWith: APT_GPG_KEY_ID_PLACEHOLDER
