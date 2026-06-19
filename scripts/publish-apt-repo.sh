@@ -43,7 +43,7 @@ gpg --batch --yes \
 rm -f /tmp/gpg-test.txt /tmp/gpg-test.txt.sig
 
 # Include packages in each supported Ubuntu suite.
-for suite in jammy noble resolute; do
+for suite in focal jammy noble resolute trixie; do
   for deb in dist/*.deb; do
     reprepro --basedir public includedeb "$suite" "$deb"
   done
